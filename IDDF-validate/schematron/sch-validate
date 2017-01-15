@@ -1,0 +1,67 @@
+#!/bin/sh
+
+DIR="/app/lib/IDDF-validate/schematron"
+
+SCHEMA="$1"
+INSTANCE="$2"
+
+xsltproc $DIR/ExtractSchFromRNG-2.xsl $SCHEMA > sch-schema.sch 2>sch.log
+
+if [ $? -ne 0 ]; then
+	echo " couldn't extract Schematron rules from the RNG schema!"
+	cat sch.log
+	exit 1;
+fi
+
+xsltproc $DIR/iso_dsdl_include.xsl sch-schema.sch > sch-schema.xsl 2>sch.log
+
+if [ $? -ne 0 ]; then
+	echo " couldn't expand the Schematron rules! [iso_dsdl_include]"
+	cat sch.log
+	exit 1;
+fi
+
+mv sch-schema.xsl sch-schema.old
+xsltproc $DIR/iso_abstract_expand.xsl sch-schema.old > sch-schema.xsl 2>sch.log
+
+if [ $? -ne 0 ]; then
+	echo " couldn't expand the Schematron rules! [iso_abstract_expand]"
+	cat sch.log
+	exit 1;
+fi
+
+mv sch-schema.xsl sch-schema.old
+xsl2 sch-schema.old $DIR/iso_svrl_for_xslt2.xsl > sch-schema.xsl 2>sch.log
+
+if [ $? -ne 0 ]; then
+	echo " couldn't expand the Schematron rules! [iso_svrl_for_xslt2]"
+	cat sch.log
+	exit 1;
+fi
+
+xsl2 $INSTANCE sch-schema.xsl > sch-output.svrl 2>sch.log
+
+if [ $? -ne 0 ]; then
+	echo " couldn't validate the Schematron rules!"
+	cat sch.log
+	exit 1;
+fi
+
+xsl2 sch-output.svrl $DIR/svrl2text.xsl > sch.log 2>&1
+
+if [ $? -ne 0 ]; then
+	cat sch.log
+	exit 1;
+fi
+
+grep -e '^RESULT.\+warnings!$' sch.log > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+	cat sch.log
+fi
+
+rm sch-output.svrl
+rm sch-schema.sch
+rm sch-schema.old
+rm sch-schema.xsl
+rm sch.log

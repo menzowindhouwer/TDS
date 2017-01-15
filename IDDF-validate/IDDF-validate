@@ -1,0 +1,72 @@
+#!/bin/sh
+
+#NVDL="jnvdl.bat"
+#NVDLARGS="-s"
+
+IDDF="/app/lib/IDDF-validate"
+
+NVDL="nvdl"
+NVDLARGS=""
+
+echo -n "IDDF doc  section [NVDL -> Relax NG validation] :"
+
+$NVDL $NVDLARGS $IDDF/IDDF-doc.nvdl $1 > log 2>&1
+if [ $? -ne 0 ]; then
+	echo " invalid!"
+	cat log
+	exit 1
+else
+	echo " valid"
+fi
+
+echo -n "IDDF doc  section [Schematron validation      ] :"
+
+$IDDF/schematron/sch-validate $IDDF/IDDF-doc.rng $1 > log 2>&1
+if [ $? -ne 0 ]; then
+	echo " invalid!"
+	cat log
+	exit 1
+else
+	echo " valid"
+fi
+
+echo -n "IDDF data schema                                :"
+
+xsltproc $IDDF/IDDF-data.xsl $1 | xmllint --format - > IDDF-data.rng 2>log
+if [ $? -ne 0 ]; then
+	echo " couldn't create schema for IDDF data section!"
+	cat log
+	exit 1;
+fi
+
+echo " generated"
+
+cp IDDF-data.rng /tmp/
+
+echo -n "IDDF data section [NVDL -> Relax NG validation] :"
+
+$NVDL $NVDLARGS $IDDF/IDDF-data.nvdl $1 > log 2>&1
+if [ $? -ne 0 ]; then
+	echo " invalid!"
+	cat log
+	exit 1
+else
+	echo " valid"
+fi
+
+#cp log IDDF.log
+
+echo -n "IDDF data section [Schematron validation      ] :"
+
+$IDDF/schematron/sch-validate IDDF-data.rng $1 > log 2>&1
+if [ $? -ne 0 ]; then
+	echo " invalid!"
+	cat log
+	exit 1
+else
+	echo " valid"
+fi
+
+rm IDDF-data.rng
+rm /tmp/IDDF-data.rng
+rm log

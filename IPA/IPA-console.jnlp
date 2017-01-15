@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+  spec="1.0+"
+  codebase="http://develop/tds/ipa/"
+  href="IPA-console.jnlp">
+  <information>
+    <title>IPA Console (unsigned) (develop)</title>
+    <vendor>TDS project</vendor>
+    <homepage href="http://develop/tds/ipa/"/>
+    <description>Copy IPA symbols to your system's clipboard, using a special purpose phonetic console.</description>
+	<icon href="gfx/splash.png"  kind="splash"/>
+	<icon href="gfx/icon-16.png" kind="shortcut" width="16" height="16"/>
+	<icon href="gfx/icon-32.png" kind="shortcut" width="32" height="32"/>
+	<icon href="gfx/icon-64.png" kind="shortcut" width="64" height="64"/>
+    <shortcut>
+      <desktop/>
+      <menu submenu="IPA Console"/>
+    </shortcut>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+"/>
+    <jar href="lib/IPA.jar" main="true"/>
+    <jar href="lib/explicit.jar"/>
+    <jar href="lib/explicitTableBuilder.jar"/>
+    <jar href="lib/saxon9.jar"/>
+    <jar href="lib/saxon9-xpath.jar"/>
+    <jar href="lib/saxon9-dom.jar"/>
+    <jar href="lib/itext.jar"/>
+  </resources>
+  <application-desc main-class="nl.uu.let.languagelink.tds.ipa.Splasher"/>
+</jnlp>

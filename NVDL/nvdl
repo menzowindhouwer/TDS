@@ -1,0 +1,4 @@
+#! /bin/sh
+
+CLASSPATH=""
+java -jar /app/lib/NVDL/jing.jar $*

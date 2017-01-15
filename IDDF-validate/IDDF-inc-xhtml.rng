@@ -1,0 +1,22 @@
+<grammar ns="http://www.w3.org/1999/xhtml" xmlns="http://relaxng.org/ns/structure/1.0">
+
+         <include href="xhtml/modules/datatypes.rng"/>
+         <include href="xhtml/modules/attribs.rng"/>
+         <include href="xhtml/modules/inlstyle.rng"/>
+
+         <include href="xhtml/modules/text.rng"/>
+         <include href="xhtml/modules/hypertext.rng"/>
+         <include href="xhtml/modules/list.rng"/>
+         <include href="xhtml/modules/pres.rng"/>
+         <include href="xhtml/modules/bdo.rng"/>
+         <include href="xhtml/modules/table.rng"/>
+
+         <define name="Inline.class" combine="choice">
+                  <ref name="link"/>
+         </define>
+
+         <define name="iddf_xhtml">
+                  <ref name="Flow.model"/>
+         </define>
+
+</grammar>

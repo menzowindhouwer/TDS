@@ -1,0 +1,10 @@
+<project name="props" basedir=".">
+
+	<!-- use local properties as default -->
+	<import file="./local-props.xml" optional="true"/>
+
+	<!-- control debug info and optimization -->
+	<property name="debug"		value="true"/>
+	<property name="optimize"	value="off"/>
+
+</project>

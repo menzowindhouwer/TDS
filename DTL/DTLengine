@@ -1,0 +1,11 @@
+#!/bin/sh
+
+SRC="/app/lib/DTL"
+
+JARS="`find "$SRC" -name '*.jar' -printf '%p:'`"
+
+#	'-Djavax.xml.parsers.DocumentBuilderFactory=net.sf.saxon.dom.DocumentBuilderFactoryImpl' \
+java \
+	-Xmx1280m \
+	-cp "$JARS" \
+	nl.uu.let.languagelink.tds.dtl.Engine $*

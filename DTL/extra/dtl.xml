@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE MODE SYSTEM "xmode.dtd">
+
+<MODE>
+    <PROPS>
+        <PROPERTY NAME="folding" VALUE="indent"/>
+        <PROPERTY NAME="indentSize" VALUE="2"/>
+        <PROPERTY NAME="noTabs" VALUE="true"/>
+        <PROPERTY NAME="tabSize" VALUE="4"/>
+    
+        <PROPERTY NAME="lineComment" VALUE="#" />
+        <PROPERTY NAME="wordBreakChars" VALUE=",+-=&lt;&gt;/?^&amp;*" />
+
+        <!-- Auto indent -->
+        <PROPERTY NAME="indentOpenBrackets" VALUE="{" />
+        <PROPERTY NAME="indentCloseBrackets" VALUE="}" />
+        <PROPERTY NAME="lineUpClosingBracket" VALUE="true"/>
+        <PROPERTY NAME="doubleBracketIndent" VALUE="true"/>
+        <PROPERTY NAME="indentNextLines" VALUE="\s*(NOTION|VALUE).*\s*" />
+    </PROPS>
+    <RULES ESCAPE="\"
+        IGNORE_CASE="FALSE"
+        HIGHLIGHT_DIGITS="TRUE"
+        DIGIT_RE="(0x[[:xdigit:]]+[lL]?|[[:digit:]]+(e[[:digit:]]*)?[lLdDfF]?)">
+        
+        <SPAN TYPE="LITERAL1">
+            <BEGIN>"</BEGIN>
+            <END>"</END>
+        </SPAN>
+
+<!--        
+        <SPAN_REGEXP HASH_CHAR="&lt;" TYPE="MARKUP">
+            <BEGIN>&lt;([[:alnum:]_]+)[^&gt;]*&gt;</BEGIN>
+            <END>&lt;/$1&gt;</END>
+        </SPAN_REGEXP>
+-->
+        
+        <SEQ_REGEXP HASH_CHAR="@" TYPE="LITERAL4">@[^[:space:]]+</SEQ_REGEXP>
+
+        <EOL_SPAN TYPE="COMMENT2">#</EOL_SPAN>
+        <SEQ TYPE="OPERATOR">=</SEQ>
+        <SEQ TYPE="OPERATOR">!</SEQ>
+        <SEQ TYPE="OPERATOR">&gt;=</SEQ>
+        <SEQ TYPE="OPERATOR">&lt;=</SEQ>
+        <SEQ TYPE="OPERATOR">+</SEQ>
+        <SEQ TYPE="OPERATOR">-</SEQ>
+        <SEQ TYPE="OPERATOR">/</SEQ>
+
+        <SEQ TYPE="OPERATOR">*</SEQ>
+        <SEQ TYPE="OPERATOR">&gt;</SEQ>
+        <SEQ TYPE="OPERATOR">&lt;</SEQ>
+        <SEQ TYPE="OPERATOR">%</SEQ>
+        <SEQ TYPE="OPERATOR">&amp;</SEQ>
+        <SEQ TYPE="OPERATOR">|</SEQ>
+        <SEQ TYPE="OPERATOR">^</SEQ>
+        <SEQ TYPE="OPERATOR">~</SEQ>
+        <SEQ TYPE="OPERATOR">}</SEQ>
+        <SEQ TYPE="OPERATOR">{</SEQ>
+
+        <KEYWORDS>
+            <KEYWORD1>WAREHOUSE</KEYWORD1>
+            <KEYWORD1>DATABASE</KEYWORD1>
+            <KEYWORD1>SCOPE</KEYWORD1>
+            <KEYWORD1>INCLUDE</KEYWORD1>
+            <KEYWORD1>DECLARE</KEYWORD1>
+            <KEYWORD2>NOTION</KEYWORD2>
+            <KEYWORD2>NOTIONS</KEYWORD2>
+            <KEYWORD2>MAP</KEYWORD2>
+            <KEYWORD2>CONCEPT</KEYWORD2>
+            <KEYWORD2>CONCEPTS</KEYWORD2>
+            <KEYWORD2>VARIABLE</KEYWORD2>
+            <KEYWORD2>QUERY</KEYWORD2>
+            <KEYWORD2>FOREACH</KEYWORD2>
+            <KEYWORD2>SKIP</KEYWORD2>
+            <KEYWORD2>PREPROCESS</KEYWORD2>
+            <KEYWORD2>FIELD</KEYWORD2>
+            <KEYWORD2>FIELDS</KEYWORD2>
+            <KEYWORD2>VALUE</KEYWORD2>
+            <KEYWORD2>MARK</KEYWORD2>
+            <KEYWORD2>KEY</KEYWORD2>
+            <KEYWORD3>OPTIONAL</KEYWORD3>
+            <KEYWORD3>ATTRIBUTE</KEYWORD3>
+            <KEYWORD3>ROOT</KEYWORD3>
+            <KEYWORD3>TOP</KEYWORD3>
+	    <KEYWORD3>GENERAL</KEYWORD3>
+	    <KEYWORD3>ANNOTATION</KEYWORD3>
+            <KEYWORD3>USE</KEYWORD3>
+            <KEYWORD3>IS</KEYWORD3>
+            <KEYWORD3>GROUPS</KEYWORD3>
+            <KEYWORD3>WHEN</KEYWORD3>
+            <KEYWORD3>FOR</KEYWORD3>
+            <KEYWORD3>OTHERWISE</KEYWORD3>
+            <KEYWORD3>CLASH</KEYWORD3>
+            <KEYWORD3>ERROR</KEYWORD3>
+            <KEYWORD3>WARNING</KEYWORD3>
+            <KEYWORD3>MESSAGE</KEYWORD3>
+            <KEYWORD3>COPY</KEYWORD3>
+            <KEYWORD3>IGNORE</KEYWORD3>
+            <KEYWORD3>DERIVE</KEYWORD3>
+            <KEYWORD3>ALL</KEYWORD3>
+            <KEYWORD3>OTHER</KEYWORD3>
+            <KEYWORD3>EXCEPT</KEYWORD3>
+            <KEYWORD3>ENUM</KEYWORD3>
+            <KEYWORD3>FREE</KEYWORD3>
+            <KEYWORD3>TEXT</KEYWORD3>
+            <KEYWORD4>LABEL</KEYWORD4>
+            <KEYWORD4>DESCRIPTION</KEYWORD4>
+            <KEYWORD4>TYPE</KEYWORD4>
+            <KEYWORD4>NOTE</KEYWORD4>
+            <KEYWORD4>LINK</KEYWORD4>
+            <KEYWORD4>TO</KEYWORD4>
+            <KEYWORD4>AS</KEYWORD4>
+            <KEYWORD4>AND</KEYWORD4>
+            <KEYWORD4>OR</KEYWORD4>
+            <KEYWORD4>NOT</KEYWORD4>
+            <KEYWORD4>FIND</KEYWORD4>
+            <KEYWORD4>MATCH</KEYWORD4>
+            <KEYWORD4>TRIM</KEYWORD4>
+            <KEYWORD4>UPPER</KEYWORD4>
+            <KEYWORD4>LOWER</KEYWORD4>
+            <KEYWORD4>REGEXP</KEYWORD4>
+            <KEYWORD4>LOOKUP</KEYWORD4>
+            <KEYWORD4>MEMO</KEYWORD4>
+            <KEYWORD4>END</KEYWORD4>
+            <LITERAL2>true</LITERAL2>
+            <LITERAL2>false</LITERAL2>
+            <LITERAL3>NULL</LITERAL3>
+            <LITERAL3>ANY</LITERAL3>
+        </KEYWORDS>
+    </RULES>
+
+</MODE>

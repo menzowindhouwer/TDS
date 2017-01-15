@@ -1,0 +1,18 @@
+<project name="local-props" basedir=".">
+
+	<!-- JDK directory -->
+	<property name="jdk"         location="/usr/lib/jvm/java-7-oracle"/>
+	<property name="jre"         location="/usr/lib/jvm/java-7-oracle/jre"/>
+
+	<!-- xml starlet -->
+	<property name="xmlstarlet"  value="xmlstarlet"/>
+
+	<!-- external library directories -->
+	<property name="javaws"      location="${jre}/lib"/>
+
+	<!-- key properties -->
+	<property name="keystore.location" value="tds.key"/>
+	<property name="key.alias"         value="http://languagelink.let.uu.nl/tds/ipa/"/>
+	<property name="keystore.password" value="tdstds"/>
+    
+</project>

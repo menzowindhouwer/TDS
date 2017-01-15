@@ -1,0 +1,37 @@
+<project name="props" basedir=".">
+
+	<!-- use local properties as default -->
+	<import file="./local-props.xml" optional="true"/>
+
+	<!-- control debug info and optimization -->
+	<property name="debug"		value="true"/>
+	<property name="optimize"	value="off"/>
+
+	<!-- JDK directory -->
+	<property name="jdk"         location="/soft"/>
+	<property name="jre"         location="/soft/jdk/jre"/>
+
+	<!-- xml starlet -->
+	<property name="xmlstarlet"  value="xmlstarlet"/>
+
+	<!-- external library directories -->
+	<property name="javaws"      location="${jre}/lib"/>
+	<property name="antlr"       location="/usr/share/java"/>
+	<property name="saxon"       location="/home/mwindhouwer/local/saxon"/>
+	<property name="cli"         location="/home/mwindhouwer/local/commons-cli"/>
+	<property name="log"         location="/home/mwindhouwer/local/commons-logging"/>
+	<property name="http"        location="/home/mwindhouwer/local/commons-httpclient"/>
+	<property name="codec"       location="/home/mwindhouwer/local/commons-codec"/>
+	<property name="tagsoup"     location="/home/mwindhouwer/local/tagsoup"/>
+	<property name="ostermiller" location="/home/mwindhouwer/local/ostermiller"/>
+	<property name="explicit"    location="/home/mwindhouwer/local/explicitTableBuilder"/>
+	<property name="xom"         location="/home/mwindhouwer/local/XOM"/>
+	<property name="nux"         location="/home/mwindhouwer/local/nux"/>
+	<property name="itext"       location="/home/mwindhouwer/local/itext"/>
+
+	<!-- key properties -->
+	<property name="keystore.location" value="tds.key"/>
+	<property name="key.alias"         value="http://languagelink.let.uu.nl/tds/ipa/"/>
+	<property name="keystore.password" value="tdstds"/>
+    
+</project>

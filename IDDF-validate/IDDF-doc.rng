@@ -1,0 +1,609 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" ns="http://languagelink.let.uu.nl/tds/ns/iddf" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+	<sch:ns uri="http://languagelink.let.uu.nl/tds/ns/iddf" prefix="iddf"/>
+	
+	<sch:pattern id="reference" abstract="true">
+		<sch:rule context="$context[exists($reference)]">
+			<sch:assert test="exists(id($reference)[self::$referent])">The reference (<sch:value-of select="'$reference'"/>=<sch:value-of select="$reference"/>) should refer to the right declaration type (<sch:value-of select="'$referent'"/>!=<sch:value-of select="name(id($reference))"/>).</sch:assert>
+		</sch:rule>
+	</sch:pattern>
+	
+	<sch:pattern id="sources" name="refer to data sources">
+		<sch:rule context="iddf:*[exists(@src)]">
+			<sch:assert test="id(@src)/self::iddf:scope/@type='datasource'">A source should refer to a datasource scope.</sch:assert>
+		</sch:rule>
+		<sch:rule context="iddf:*[exists(@srcs)]">
+			<sch:assert test="empty(for $src in tokenize(@srcs,'\s+') return id($src)/self::iddf:scope[empty(@type) or @type!='datasource'])">All sources should refer to a datasource scope.</sch:assert>
+		</sch:rule>
+	</sch:pattern>
+	
+	<sch:pattern id="resource" name="refer to a resource type" is-a="reference">
+		<sch:param name="context" value="iddf:*[exists(@res)]"/>
+		<sch:param name="reference" value="@res"/>
+		<sch:param name="referent" value="iddf:resource"/>
+	</sch:pattern>
+	
+	<start>
+		<choice>
+			<element name="iddf">
+				<attribute name="iddfVersion">
+					<value>1.0</value>
+				</attribute>
+				<ref name="IDDF_doc"/>
+				<!--<ref name="IDDF_data"/>-->
+				<zeroOrMore>
+					<ref name="IDDF_resource"/>
+				</zeroOrMore>
+			</element>
+			<ref name="IDDF_doc"/>
+			<ref name="IDDF_data"/>
+		</choice>
+	</start>
+	
+	<!-- include xhtml -->
+	
+	<include href="IDDF-inc-xhtml.rng"/>
+	
+	<!-- main sections -->
+
+	<define name="IDDF_doc">
+		<element name="documentation">
+			<interleave>
+				<zeroOrMore>
+					<ref name="IDDF_annotation"/>
+				</zeroOrMore>
+				<zeroOrMore>
+					<ref name="IDDF_relation"/>
+				</zeroOrMore>
+				<zeroOrMore>
+					<ref name="IDDF_datatype"/>
+				</zeroOrMore>
+				<ref name="IDDF_collection_scope"/>
+				<zeroOrMore>
+					<ref name="IDDF_context_notion"/>
+				</zeroOrMore>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="IDDF_data">
+		<element name="data">
+			<optional>
+				<attribute name="src">
+					<!--<data type="IDREF"/>-->
+					<text/>
+				</attribute>
+			</optional>
+		</element>
+	</define>
+	
+	<define name="IDDF_resource">
+		<element name="resource">
+			<attribute name="xml:id">
+				<data type="ID"/>
+			</attribute>
+			<attribute name="href">
+				<data type="anyURI"/>
+			</attribute>
+		</element>
+	</define>
+
+	<!-- documentation units -->
+
+	<define name="IDDF_datatype">
+		<element name="datatype">
+			<attribute name="xml:id">
+				<data type="ID"/>
+			</attribute>
+			<interleave>
+				<optional>
+					<ref name="label"/>
+				</optional>
+				<optional>
+					<ref name="description"/>
+				</optional>
+				<optional>
+					<ref name="datatype_values"/>
+				</optional>
+				<zeroOrMore>
+					<ref name="IDDF_datatype"/>
+				</zeroOrMore>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="IDDF_annotation">
+		<element name="annotation">
+			<attribute name="xml:id">
+				<data type="ID"/>
+			</attribute>
+			<interleave>
+				<optional>
+					<ref name="label"/>
+				</optional>
+				<optional>
+					<ref name="description"/>
+				</optional>
+				<optional>
+					<ref name="values"/>
+				</optional>
+				<zeroOrMore>
+					<ref name="IDDF_annotation"/>
+				</zeroOrMore>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="IDDF_relation">
+		<element name="relation">
+			<attribute name="xml:id">
+				<data type="ID"/>
+			</attribute>
+			<interleave>
+				<ref name="IDDF_relation_doc"/>
+				<zeroOrMore>
+					<ref name="IDDF_relation_type"/>
+				</zeroOrMore>
+			</interleave>
+		</element>
+	</define>
+	
+	<define name="IDDF_relation_type">
+		<element name="relation">
+			<attribute name="xml:id">
+				<data type="ID"/>
+			</attribute>
+			<interleave>
+				<ref name="IDDF_relation_doc"/>
+				<zeroOrMore>
+					<ref name="IDDF_relation_type"/>
+				</zeroOrMore>
+			</interleave>
+		</element>
+	</define>
+	
+	<define name="IDDF_relation_doc">
+		<optional>
+			<ref name="label"/>
+		</optional>
+		<optional>
+			<ref name="description"/>
+		</optional>
+		<zeroOrMore>
+			<ref name="link"/>
+		</zeroOrMore>
+	</define>
+
+	<define name="IDDF_context_notion">
+		<element name="notion">
+			<optional>
+				<attribute name="xml:id">
+					<data type="ID"/>
+				</attribute>
+			</optional>
+			<attribute name="type">
+				<choice>
+					<value>root</value>
+					<value>top</value>
+				</choice>
+			</attribute>
+			<ref name="IDDF_notion_doc"/>
+		</element>
+	</define>
+
+	<define name="IDDF_notion">
+		<element name="notion">
+			<optional>
+				<attribute name="xml:id">
+					<data type="ID"/>
+				</attribute>
+			</optional>
+			<choice>
+				<ref name="IDDF_notion_doc"/>
+				<attribute name="ref">
+					<data type="IDREF"/>
+				</attribute>
+			</choice>
+			<sch:pattern name="locally unique notion">
+				<sch:rule context="iddf:notion[exists(@name)]">
+					<sch:let name="name" value="concat(@scope,':',@name)"/>
+					<sch:assert test="empty((preceding-sibling::iddf:notion|following-sibling::iddf:notion)[concat(@scope,':',@name)=$name])">A notion (identified by the combination of scope and name) should be localy unique.</sch:assert>
+				</sch:rule>
+				<sch:rule context="iddf:notion[exists(@ref)]">
+					<sch:let name="ref" value="@ref"/>
+					<sch:assert test="empty((preceding-sibling::iddf:notion|following-sibling::iddf:notion)[@ref=$ref])">A notion can only be locally referenced once.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+			<sch:pattern name="refer to context notion">
+				<sch:rule context="iddf:notion[exists(@ref)]">
+					<sch:let name="ref" value="@ref"/>
+					<sch:assert test="exists(id($ref)[self::iddf:notion][@type='root' or @type='top'])">A notion reference can only refer to a root or top notion.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+			<sch:pattern name="check valid scope nesting">
+				<sch:rule context="iddf:notion/iddf:notion[exists(@scope)]">
+					<sch:let name="outer-scope" value="../@scope"/>
+					<sch:let name="inner-scope" value="@scope"/>
+					<sch:assert test="exists(index-of(($inner-scope,id($inner-scope)/(ancestor::iddf:scope|descendant::iddf:scope)/@xml:id),$outer-scope))">Notions from these scopes (<sch:value-of select="$outer-scope"/>, <sch:value-of select="$inner-scope"/>) can't be nested.</sch:assert>
+				</sch:rule>
+				<sch:rule context="iddf:notion/iddf:notion[exists(@ref)]">
+					<sch:let name="outer-scope" value="../@scope"/>
+					<sch:let name="inner-scope" value="id(@ref)/@scope"/>
+					<sch:assert test="exists(index-of(($inner-scope,id($inner-scope)/(ancestor::iddf:scope|descendant::iddf:scope)/@xml:id),$outer-scope))">Notions from these scopes (<sch:value-of select="$outer-scope"/>, <sch:value-of select="$inner-scope"/>) can't be nested.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</element>
+	</define>
+
+	<define name="IDDF_notion_doc">
+		<attribute name="name"/>
+		<attribute name="scope">
+			<data type="IDREF"/>
+		</attribute>
+		<sch:pattern id="notion-scope-reference" name="refer to a scope" is-a="reference">
+			<sch:param name="context" value="iddf:notion"/>
+			<sch:param name="reference" value="@scope"/>
+			<sch:param name="referent" value="iddf:scope"/>
+		</sch:pattern>
+		<optional>
+			<attribute name="datatype">
+				<data type="IDREF"/>
+			</attribute>
+			<sch:pattern id="notion-datatype-reference" name="refer to a data type" is-a="reference">
+				<sch:param name="context" value="iddf:notion"/>
+				<sch:param name="reference" value="@datatype"/>
+				<sch:param name="referent" value="iddf:datatype"/>
+			</sch:pattern>
+		</optional>
+		<optional>
+			<choice>
+				<attribute name="src">
+					<data type="IDREF"/>
+				</attribute>
+				<attribute name="srcs">
+					<data type="IDREFS"/>
+				</attribute>
+			</choice>
+		</optional>
+		<optional>
+			<attribute name="freq">
+				<data type="nonNegativeInteger"/>
+			</attribute>
+		</optional>
+		<interleave>
+			<optional>
+				<ref name="label"/>
+			</optional>
+			<optional>
+				<ref name="description"/>
+			</optional>
+			<zeroOrMore>
+				<ref name="link"/>
+			</zeroOrMore>
+			<optional>
+				<ref name="keys"/>
+			</optional>
+			<optional>
+				<ref name="values"/>
+			</optional>
+			<zeroOrMore>
+				<ref name="IDDF_notion"/>
+			</zeroOrMore>
+		</interleave>
+	</define>
+
+	<define name="IDDF_collection_scope">
+		<element name="scope">
+			<attribute name="xml:id">
+				<data type="ID"/>
+			</attribute>
+			<attribute name="type">
+				<value>collection</value>
+			</attribute>
+			<ref name="IDDF_scope_doc"/>
+		</element>
+	</define>
+
+	<define name="IDDF_scope">
+		<element name="scope">
+			<attribute name="xml:id">
+				<data type="ID"/>
+			</attribute>
+			<optional>
+				<attribute name="type">
+					<value>datasource</value>
+				</attribute>
+			</optional>
+			<ref name="IDDF_scope_doc"/>
+		</element>
+	</define>
+	
+	<define name="IDDF_scope_doc">
+		<optional>
+			<attribute name="ns"/>
+		</optional>
+		<interleave>
+			<optional>
+				<ref name="label"/>
+			</optional>
+			<optional>
+				<ref name="description"/>
+			</optional>
+			<zeroOrMore>
+				<ref name="link"/>
+			</zeroOrMore>
+		</interleave>
+		<zeroOrMore>
+			<ref name="IDDF_scope"/>
+		</zeroOrMore>
+	</define>
+
+	<!-- generics -->
+
+	<define name="datatype">
+		<optional>
+			<attribute name="datatype">
+				<data type="IDREF"/>
+				<sch:pattern id="datatype-datatype-reference" name="refer to a data type" is-a="reference">
+					<sch:param name="context" value="iddf:datatype"/>
+					<sch:param name="reference" value="@datatype"/>
+					<sch:param name="referent" value="iddf:datatype"/>
+				</sch:pattern>
+			</attribute>
+		</optional>
+	</define>
+
+	<define name="coverage">
+		<optional>
+			<attribute name="coverage" a:defaultValue="partial">
+				<choice>
+					<value>partial</value>
+					<value>total</value>
+				</choice>
+			</attribute>
+		</optional>
+	</define>
+
+	<define name="combine">
+		<optional>
+			<attribute name="combine" a:defaultValue="merge">
+				<choice>
+					<value>merge</value>
+					<value>replace</value>
+				</choice>
+			</attribute>
+		</optional>
+	</define>
+	
+	<define name="description">
+		<element name="description">
+			<choice>
+				<text/>
+				<ref name="iddf_xhtml"/>
+			</choice>
+		</element>
+	</define>
+
+	<define name="key">
+		<element name="key">
+			<optional>
+				<attribute name="xml:id">
+					<data type="ID"/>
+				</attribute>
+			</optional>
+			<optional>
+				<choice>
+					<attribute name="src">
+						<data type="IDREF"/>
+					</attribute>
+					<attribute name="srcs">
+						<data type="IDREFS"/>
+					</attribute>
+				</choice>
+			</optional>
+			<optional>
+				<attribute name="freq">
+					<data type="nonNegativeInteger"/>
+				</attribute>
+			</optional>
+			<interleave>
+				<element name="literal">
+					<text/>
+				</element>
+				<optional>
+					<ref name="label"/>
+				</optional>
+				<optional>
+					<ref name="description"/>
+				</optional>
+				<zeroOrMore>
+					<ref name="link"/>
+				</zeroOrMore>
+			</interleave>
+			<sch:pattern name="key values should be unique">
+				<sch:rule context="iddf:key">
+					<sch:let name="literal" value="iddf:literal"/>
+					<sch:assert test="empty((preceding-sibling::iddf:key|following-sibling::iddf:key)[iddf:literal=$literal])">A literal key value should be locally unique.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+			<sch:pattern name="warn when key labels are not unique">
+				<sch:rule context="iddf:key" role="warning">
+					<sch:let name="label" value="iddf:label"/>
+					<sch:assert test="empty((preceding-sibling::iddf:key|following-sibling::iddf:key)[iddf:label=$label])">A key label isn't locally unique.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</element>
+	</define>
+
+	<define name="keys">
+		<element name="keys">
+			<choice>
+				<group>
+					<!-- option 1: the notion contains a list of keys -->
+					<ref name="datatype"/>
+					<ref name="coverage"/>
+					<ref name="combine"/>
+					<zeroOrMore>
+						<ref name="key"/>
+					</zeroOrMore>
+				</group>
+				<group>
+					<!-- option 2: the value of a descendant notion is also the key -->
+					<attribute name="ref"/>
+					<sch:pattern name="key notion should be a descendant">
+						<sch:rule context="iddf:keys[exists(@ref)]">
+							<sch:let name="ref" value="@ref"/>
+							<sch:assert test="exists(parent::iddf:notion//iddf:notion[@xml:id=$ref])">A key notion should be a descandent of the keyed notion.</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+				</group>
+				<!-- option 3: the value of the notion is the key -->
+				<element name="values">
+					<empty/>
+				</element>
+				<sch:pattern name="key notion should have values">
+					<sch:rule context="iddf:keys[exists(iddf:values)]">
+						<sch:assert test="exists(preceding-sibling::iddf:values|following-sibling::iddf:values)">A values key notion should have a values enumeration.</sch:assert>
+					</sch:rule>
+				</sch:pattern>
+			</choice>
+		</element>
+	</define>
+
+	<define name="label">
+		<element name="label">
+			<text/>
+		</element>
+	</define>
+
+	<define name="link">
+		<element name="link" ns="http://languagelink.let.uu.nl/tds/ns/iddf">
+			<attribute name="rel">
+				<data type="IDREF"/>
+			</attribute>
+			<sch:pattern id="link-rel-reference" name="refer to a relation type" is-a="reference">
+				<sch:param name="context" value="iddf:link"/>
+				<sch:param name="reference" value="@rel"/>
+				<sch:param name="referent" value="iddf:relation"/>
+			</sch:pattern>
+			<optional>
+				<attribute name="type"> <!-- fine tunes the relationship, e.g., broader or narrower -->
+					<data type="IDREF"/>
+				</attribute>
+				<sch:pattern id="link-type-reference" name="refer to a relation subtype">
+					<sch:rule context="iddf:link[exists(@rel)][exists(@type)]">
+						<sch:assert test="id(@type)/self::iddf:relation/parent::iddf:relation/@xml:id=current()/@rel">The subtype relationship (<sch:value-of select="@type"/>) should be nested in the supertype relationship (<sch:value-of select="@rel"/>).</sch:assert>
+					</sch:rule>
+				</sch:pattern>
+			</optional>
+			<optional>
+				<choice>
+					<attribute name="href">
+						<!-- reference to a place outside the IDDF document -->
+						<data type="anyURI"/>
+					</attribute>
+					<group>
+						<!-- refers to one of the related resources -->
+						<attribute name="res">
+							<data type="IDREF"/>
+						</attribute>
+						<!-- (id) reference to a place inside a related resource -->
+						<attribute name="ref"/>
+					</group>
+					<group>
+						<!-- (id) reference to a place inside the IDDF document -->
+						<attribute name="ref"/>
+						<sch:pattern id="link-reference" name="refer to a place in the IDDF document">
+							<sch:rule context="iddf:link[empty(@res)][exists(@ref)]">
+								<sch:assert test="exists(id(@ref))">Reference (<sch:value-of select="@ref"/>) should be resolvable within the IDDF document.</sch:assert>
+							</sch:rule>
+						</sch:pattern>
+					</group>
+					<group>
+						<optional>
+							<!-- refers to one of the related resources -->
+							<attribute name="res">
+								<data type="IDREF"/>
+							</attribute>
+						</optional>
+						<choice>
+							<!-- XPath reference to a place inside the IDDF document or a related resource -->
+							<attribute name="xref"/>
+						</choice>
+					</group>
+				</choice>
+			</optional>
+			<text/>
+		</element>
+	</define>
+
+	<define name="value">
+		<element name="value">
+			<optional>
+				<attribute name="xml:id">
+					<data type="ID"/>
+				</attribute>
+			</optional>
+			<optional>
+				<choice>
+					<attribute name="src">
+						<data type="IDREF"/>
+					</attribute>
+					<attribute name="srcs">
+						<data type="IDREFS"/>
+					</attribute>
+				</choice>
+			</optional>
+			<optional>
+				<attribute name="freq"/>
+			</optional>
+			<interleave>
+				<element name="literal">
+					<text/>
+				</element>
+				<optional>
+					<ref name="label"/>
+				</optional>
+				<optional>
+					<ref name="description"/>
+				</optional>
+				<zeroOrMore>
+					<ref name="link"/>
+				</zeroOrMore>
+			</interleave>
+			<sch:pattern name="values should be unique">
+				<sch:rule context="iddf:value">
+					<sch:let name="literal" value="iddf:literal"/>
+					<sch:assert test="empty((preceding-sibling::iddf:value|following-sibling::iddf:value)[iddf:literal=$literal])">A literal value should be locally unique.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+			<sch:pattern name="warn when value labels are not unique">
+				<sch:rule context="iddf:value" role="warning">
+					<sch:let name="label" value="iddf:label"/>
+					<sch:assert test="empty((preceding-sibling::iddf:value|following-sibling::iddf:value)[iddf:label=$label])">A value label isn't locally unique.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</element>
+	</define>
+
+	<define name="values">
+		<element name="values">
+			<ref name="datatype"/>
+			<ref name="coverage"/>
+			<ref name="combine"/>
+			<zeroOrMore>
+				<ref name="value"/>
+			</zeroOrMore>
+		</element>
+	</define>
+
+	<define name="datatype_values">
+		<element name="values">
+			<ref name="coverage"/>
+			<ref name="combine"/>
+			<zeroOrMore>
+				<ref name="value"/>
+			</zeroOrMore>
+		</element>
+	</define>
+
+</grammar>

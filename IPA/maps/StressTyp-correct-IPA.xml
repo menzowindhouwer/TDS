@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<characterMapping
+ id="ST-correct"
+ version="1"
+ description="Correct StressTyp IPA conversion"
+>
+  <assignments>
+    <a b="0323" u="0318"/>
+	<a b="00B9" u="02E1"/>
+    <a b="02D5" u="02D1"/>
+    <a b="02E3" u="033D"/>
+    <a b="0331" u="0320"/>
+    <a b="0142" u="0268"/>
+    <a b="02C1" u="02E4"/>
+    <a b="0348" u="203F"/>
+    <a b="0193" u="0255"/>
+  </assignments>
+</characterMapping>

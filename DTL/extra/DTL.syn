@@ -1,0 +1,87 @@
+; Syntax definitions for DTL
+
+C=1
+
+[Syntax]
+Namespace1 = 1
+IgnoreCase = No
+InitKeyWordChars = A-Za-z!
+KeyWordChars = A-Za-z0-9:-
+BracketChars =
+OperatorChars = <>?=!+/\[]%
+PreprocStart =
+SyntaxStart =
+SyntaxEnd =
+CommentStart = 
+CommentEnd = 
+CommentStartAlt =
+CommentEndAlt =
+SingleComment = #
+SingleCommentCol =
+SingleCommentAlt =
+SingleCommentColAlt =
+SingleCommentEsc =
+StringStart = "
+StringEnd = "
+StringAlt = 
+StringEsc = \
+CharStart = '
+CharEnd = '
+CharEsc = \
+
+[Keywords 1]
+SCOPE
+WAREHOUSE
+DATABASE
+INCLUDE
+DECLARE
+NAME
+ABBREVIATION
+ACCESS
+NAMESPACE
+WEBSITE
+RESEARCHER
+CONTACT
+OPTIONAL
+ROOT
+TOP
+NOTION
+MAP
+PREPROCESS
+FIELD
+VARIABLE
+
+[Keywords 2]
+LINK
+TO
+AS
+CONCEPT
+CONCEPTS
+LABEL
+DESCRIPTION
+NOTE
+
+[Keywords 3]
+IS
+GROUPS
+USE
+
+[Keywords 4]
+IMPORT
+VALUE
+MARK
+FOR
+OTHERWISE
+CLASH
+ERROR
+WARNING
+MESSAGE
+COPY
+IGNORE
+ANY
+LOOKUP
+REGEXP
+OR
+AND
+
+[Keywords 5]

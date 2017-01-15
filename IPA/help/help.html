@@ -1,0 +1,158 @@
+<html xmlns:xi="http://www.w3.org/2001/XInclude">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+    <body>
+        <font face="sans-serif">
+            <p align="center">
+                The TDS IPA Console is brought to you by the TDS Project.
+				<br/>
+                Visit the TDS homepage at <a href="http://languagelink.let.uu.nl/tds/">http://languagelink.let.uu.nl/tds/</a>.
+            </p>
+        </font>
+        <br/><hr/>
+        <font face="sans-serif">
+        <center>
+            [
+            <a href="#releases">release information</a>
+            |
+            <a href="#acknowledgements">acknowledgements</a>
+            ]
+        </center>
+		<p>
+			Use the <b>Console buttons</b> to compose an IPA string in the buffer area, then
+			press <b>Cut</b> or <b>Copy</b> to put it on the system clipboard. You can then paste it
+			into any text editor or other application that supports cutting and pasting.
+		</p>
+		<p>
+			Characters supported by your <b>computer
+			keyboard</b> can also be entered by simply typing
+			them. The <b>Backspace</b> and <b>Delete</b> keys
+			can be used to edit the generated string.
+		</p>
+		<p>
+			<b>Non-spacing diacritics</b> (accents etc.) must be entered after the
+			character they modify.
+		</p>
+		<p>
+			The console is <b>extensible:</b> The second and third tabs have space for user-selected
+			symbols. You can define new buttons that insert any Unicode character (not just from
+			the IPA subset). User-defined buttons will be remembered for future Console sessions.
+		</p>
+		<p>
+			Many <b>fonts</b> do not provide the full set of IPA symbols. The Console will try to select
+			a complete font when it starts up. Use the list next to the character buffer to change
+			the font of the text you type. Use the Settings tab to change the font used on the
+			symbol buttons. If you don't have a suitable Unicode font, you can <a
+			href="http://languagelink.let.uu.nl/tds/ipa/#IPAfonts">download fonts</a> from the
+			internet. Note that symbols will be correctly inserted even if you do not have a
+			font that can display them. (They will appear correctly on another computer, or if you
+			install a suitable font later).
+		</p>
+		<p>
+			The <b>Import IPA</b> tab can be used to import (convert to Unicode) text that
+			was written using the older non-unicode fonts published by SIL, or other
+			compatible fonts.
+		</p>
+		<p>
+			The <b>Settings</b> tab allows you to customize the operation of the program. Changes
+			in the settings will be remembered for future Console sessions.
+		</p>
+		<p> In the Settings tab, you can choose whether to
+		<b>compose</b> 
+		characters and diacritics whenever Unicode provides a
+		combined character. Combined characters look better, but the
+		diacritic cannot be separated from the base
+		character during later editing. 
+		</p>
+		<p>
+		        The IPA Console can stay resident as an icon in the <b>system tray</b> (for window managers that
+		        support it). Because of security restrictions, this
+		        feature is not available with the unsigned version
+		        of the Console (see <a
+		        href="http://languagelink.let.uu.nl/tds/ipa/#unsigned">here</a>
+		        for more information).
+		</p>
+        <p>
+            Additional information can be found on the <b>IPA Console homepage,</b> at <a
+            href="http://languagelink.let.uu.nl/tds/ipa/">http://languagelink.let.uu.nl/tds/ipa/</a>.
+        </p>
+        </font>
+        <br/><hr/>
+        <font face="sans-serif">
+			<a name="releases">
+                <b>Release information</b>
+            </a>
+            <dl>
+                <dt>
+                    <i>2009 january 21</i>
+                </dt>
+                <dd>
+					Better support for Mac OS X 10.5 (Leopard). The preferred Arial Unicode MS font is called ArialUnicodeMS on a Mac. The IPA Console system tray functionality isn't (properly) supported on OS X.
+                </dd>
+                <dt>
+                    <i>2008 august 26</i>
+                </dt>
+                <dd>
+					Upgraded to Unicode 5.1. This version of Unicode has an official codepoint for the labiodental flap (U+2C71), which is now used in the pulmonic consonants table. The look-alike has been added to the other symbols.
+                </dd>
+                <dt>
+                    <i>2007 may 10</i>
+                </dt>
+                <dd>
+					On Mac OS X the IPA Console also renders properly. Please report if this update has negative effects on other platforms.
+                </dd>
+                <dt>
+                    <i>2007 may 8</i>
+                </dt>
+                <dd>
+					The default is now to put the Unicode text in all formats on the clipboard. The known word processors pick the most proper format by default. There is still an option on the settings tab to put just plain text on the clipboard.
+                </dd>
+                <dt>
+                    <i>2007 april 19</i>
+                </dt>
+                <dd>
+					The clipboard format setting drop down has been simplified. Persistent settings have been made independent of the actual labels used in the settings tab.
+                </dd>
+                <dt>
+                    <i>2007 march 20</i>
+                </dt>
+                <dd>
+                    Finetuned the HTML clipboard format so it doesn't append a superfluous newline. Unfortunately Microsoft Word 2000 still needs the &lt;tt/> wrapper to listen to all the font information in all cases. Added shortcut entries to the clipboard format settings for tested word processors (Microsoft Word 2000, 2003, WordPad and OpenOffice.org Writer).
+                </dd>
+                <dt>
+                    <i>2007 march 15</i>
+                </dt>
+                <dd>
+                    Microsoft Word 2000 doesn't listen to the RTF font information, so the default clipboard format is now HTML which works in all (tested) cases.
+                </dd>
+            </dl>
+        </font>
+        <br/><hr/>
+        <font face="sans-serif">
+			<a name="acknowledgements">
+                <b>Acknowledgements</b>
+            </a>
+            <p>
+                The IPA Console was developed by Menzo Windhouwer, with input from Rob Goedemans, Alexis Dimitriadis and Adam Saulwick.
+            </p>
+            <p>
+                The following excellent open source libraries are used by the IPA Console:
+                <ul>
+                    <li>the <a href="https://explicit-tablelayout.dev.java.net/">Explicit Table Builder</a> by pietschy;</li>
+                    <li>the <a href="http://www.zookitec.com/explicitlayout.html">Explicit Layout</a> by Zooki Technologies;</li>
+                    <li>the <a href="http://sourceforge.net/projects/saxon">Saxon XSLT and XQuery Processor</a> by Michael Kay;</li>
+                    <li>the <a href="http://www.lowagie.com/iText/">iText PDF Library</a> by Bruno Lowagie and Paulo Soares.</li>
+                </ul>
+            </p>
+        </font>
+        <br/><hr/>
+        <font face="sans-serif">
+			<p align="center">
+            	IPA Console - <xi:include href="../../sources/revision.xml"><xi:fallback>unknown version</xi:fallback></xi:include> - 2005-2009 &#169; 
+		<a target="other" href="http://www.lotschool.nl/">LOT</a>
+			</p>
+        </font>
+    </body>
+</html>
+

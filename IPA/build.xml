@@ -1,0 +1,148 @@
+<project name="IPAconsole" default="dist" basedir=".">
+
+	<description>Build the IPA console</description>
+
+	<!-- import shared properties -->
+	<import file="./props.xml"/>
+	<dirname property="props.basedir" file="${ant.file.props}"/>
+	<property name="keystore" location="${props.basedir}/${keystore.location}"/>
+	<available file="${keystore}" property="keystore.present"/>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src"/>
+	<property name="gfx" location="gfx"/>
+	<property name="help" location="help"/>
+	<property name="maps" location="maps"/>
+	<property name="unicode" location="unicode"/>
+	<property name="build" location="build"/>
+	<property name="dist" location="dist"/>
+	<property name="lib" location="lib"/>
+	<property name="install" location="."/>
+	<property name="libs" location="./lib"/>
+	<property name="xlibs" location="./lib"/>
+	
+	<!-- set the classpath -->
+	<path id="libs">
+		<pathelement location="${xlibs}/explicit.jar"/>
+		<pathelement location="${xlibs}/explicitTableBuilder.jar"/>
+		<pathelement location="${xlibs}/saxon9.jar"/>
+		<pathelement location="${xlibs}/saxon9-xpath.jar"/>
+		<pathelement location="${xlibs}/saxon9-dom.jar"/>
+		<pathelement location="${xlibs}/itext.jar"/>
+		<pathelement location="${javaws}/javaws.jar"/>
+	</path>
+
+	<target name="init">
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}"/>
+	</target>
+
+	<target name="compile" depends="init" description="compile the source">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac destdir="${build}" compiler="modern" encoding="utf-8" debug="${debug}"
+			optimize="${optimize}">
+			<src path="${src}"/>
+			<classpath refid="libs"/>
+		</javac>
+		<!-- Expand the maps XML file -->
+		<exec dir="${maps}" executable="xmllint" output="${build}/maps.xml"
+			error="${build}/maps.log" failonerror="true">
+			<arg line="--xinclude index.xml"/>
+		</exec>
+		<!-- Copy the Unicode XML file -->
+		<copy file="${unicode}/codepoints.xml" todir="${build}"/>
+		<!-- Copy the graphics -->
+		<copy todir="${build}">
+			<fileset dir="${gfx}" excludes="**/*.pspimage"/>
+		</copy>
+		<!-- Expand the maps XML file -->
+		<exec dir="${help}" executable="xmllint" output="${build}/help.html.tmp"
+			error="${build}/help.log" failonerror="true">
+			<arg line="--xinclude help.html"/>
+		</exec>
+		<exec dir="${build}" executable="${xmlstarlet}" output="${build}/help.html"
+			error="${build}/help.log" failonerror="false">
+			<arg line="fo --omit-decl help.html.tmp"/>
+		</exec>
+		<delete file="${build}/help.html.tmp"/>
+		<!-- Copy the help pages -->
+		<copy todir="${build}">
+			<fileset dir="${help}" excludes="**/help.html"/>
+		</copy>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib"/>
+		<!-- Put everything in ${build} into the IPA.jar file -->
+		<jar jarfile="${dist}/lib/IPA.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="nl.uu.let.languagelink.tds.ipa.Splasher"/>
+				<attribute name="SplashScreen-Image" value="splash.png"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="install" depends="dist" description="install the distribution">
+		<!-- Create the installation directory -->
+		<mkdir dir="${install}"/>
+		<mkdir dir="${install}/lib"/>
+		<!-- Copy the distribution DTL.jar to the lib directory -->
+		<copy file="${dist}/lib/IPA.jar" todir="${libs}"/>
+		<!-- Copy the distribution DTL.jar to the install lib directory -->
+		<copy file="${dist}/lib/IPA.jar" todir="${install}/lib"/>
+		<!-- Copy the libraries to the install lib directory -->
+		<copy file="${xlibs}/explicit.jar" todir="${install}/lib"/>
+		<copy file="${xlibs}/explicitTableBuilder.jar" todir="${install}/lib"/>
+		<copy file="${xlibs}/saxon9.jar" todir="${install}/lib"/>
+		<copy file="${xlibs}/saxon9-xpath.jar" todir="${install}/lib"/>
+		<copy file="${xlibs}/saxon9-dom.jar" todir="${install}/lib"/>
+		<copy file="${xlibs}/itext.jar" todir="${install}/lib"/>
+		<!-- Sign the jars -->
+		<signjar jar="${dist}/lib/IPA.jar" signedjar="${install}/lib/IPA-signed.jar"
+			alias="${key.alias}" keystore="${keystore}" storepass="${keystore.password}"/>
+		<signjar jar="${xlibs}/explicit.jar" signedjar="${install}/lib/explicit-signed.jar"
+			alias="${key.alias}" keystore="${keystore}" storepass="${keystore.password}"/>
+		<signjar jar="${xlibs}/explicitTableBuilder.jar"
+			signedjar="${install}/lib/explicitTableBuilder-signed.jar" alias="${key.alias}"
+			keystore="${keystore}" storepass="${keystore.password}"/>
+		<signjar jar="${xlibs}/saxon9.jar" signedjar="${install}/lib/saxon9-signed.jar"
+			alias="${key.alias}" keystore="${keystore}" storepass="${keystore.password}"/>
+		<signjar jar="${xlibs}/saxon9-xpath.jar" signedjar="${install}/lib/saxon9-xpath-signed.jar"
+			alias="${key.alias}" keystore="${keystore}" storepass="${keystore.password}"/>
+		<signjar jar="${xlibs}/saxon9-dom.jar" signedjar="${install}/lib/saxon9-dom-signed.jar"
+			alias="${key.alias}" keystore="${keystore}" storepass="${keystore.password}"/>
+		<signjar jar="${xlibs}/itext.jar" signedjar="${install}/lib/itext-signed.jar"
+			alias="${key.alias}" keystore="${keystore}" storepass="${keystore.password}"/>
+	</target>
+
+	<target name="run" depends="install" description="run the application">
+		<java classname="nl.uu.let.languagelink.tds.ipa.Splasher" fork="yes" failonerror="true">
+			<classpath>
+				<path refid="libs"/>
+				<pathelement location="${dist}/lib/IPA.jar"/>
+			</classpath>
+			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"/>
+		</java>
+	</target>
+
+	<target name="launch" depends="install" description="launch the application using webstart">
+		<exec executable="javaws" dir=".">
+			<arg line="-codebase file:. file:IPA-console-signed.jnlp"/>
+		</exec>
+	</target>
+
+	<target name="uninstall" description="uninstall the application from the webstart cache">
+		<exec executable="javaws">
+			<arg line="-uninstall http://languagelink.let.uu.nl/tds/ipa/IPA-Console-signed.jnlp"/>
+		</exec>
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+		<delete dir="${lib}"/>
+	</target>
+
+</project>
